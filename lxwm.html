@@ -14,6 +14,15 @@
 	<link href="./css/bootstrap.css" rel="stylesheet">
 	<link href="./css/main.css" rel="stylesheet" type="text/css" >
 	<script src="./js/bootstrap.js"></script>
+
+	<!--引用百度地图API-->
+	<style type="text/css">
+    	html,body{margin:0;padding:0;}
+    	.iw_poi_title {color:#CC5522;font-size:14px;font-weight:bold;overflow:hidden;padding-right:13px;white-space:nowrap}
+    	.iw_poi_content {font:12px arial,sans-serif;overflow:visible;padding-top:4px;white-space:-moz-pre-wrap;word-wrap:break-word}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+
 </head>
 <body>
 	<!-- 導航 -->
@@ -100,7 +109,7 @@
 						</li>
 						<!-- 下拉菜單 end-->
 						<li>
-							 <a href="#" style="color: #fff">学术交流</a>
+							 <a href="lxwm.html" style="color: #fff">学术交流</a>
 						</li>
 						<li class="dropdown">
 							 <a class="dropdown-toggle" href="#" data-toggle="dropdown" style="color: #fff">新闻通告<strong class="caret"></strong></a>
@@ -138,49 +147,40 @@
 		<div class="col-md-12 column" style="padding-bottom: 20px;">
 			<div class="page-header">
 				<h1>
-					研究方向 <small>Research Direction</small>
+					联系我们 <small>Contact us</small>
 				</h1>
-			</div>
-		</div>
-	</div>
-	<div class="row clearfix">
-		<div class="col-md-3 column">
-			<div class="panel panel-default" style="width: 80%;margin-top: 20px;">
-					<!-- <div class="panel-heading">
-					<h3 class="panel-title" style="font-size: 18px;">团队概况</h3>
-					</div> -->
-				<a href="#"><div class="panel-body" style="border-bottom: 1px solid #ddd;">
-					<div style="font-size: 18px;padding-left: 5px;color: #000;">团队简介</div>
-				</div></a>
-				<div class="panel-body">
-					<div style="font-size: 18px;padding-left: 5px;color: #000;">研究方向</div>
+				<div style="padding:20px 5px 0 0; font-size: 16px;" >
+				<p>团队常年招收硕士研究生、博士研究生，提供博士后职位，欢迎各位报考，欢迎本科生参加业余科研。请通过以下方式联系我们：</p>
 				</div>
-				<a href="#"><div class="panel-body" style="border-top: 1px solid #ddd;">
-					<div style="font-size: 18px;padding-left: 5px;color: #000;">实验设备</div>
-				</div></a>
-				<!-- <div class="panel-heading"  style="border-top: 1px solid #ddd;">
-					<h3 class="panel-title" style="font-size: 18px;padding-left: 5px;">xxxxx</h3>
-				</div> -->
-				<!-- <a href="#"><div class="panel-body">
-					<div style="font-size: 16px;color: #000;padding-left: 15px;">xxxxx</div>
-				</div></a>
-				<a href="#"><div class="panel-body" style="border-top: 1px solid #ddd">
-					<div style="font-size: 16px;color: #000;padding-left: 15px;">xxxxx</div>
-				</div></a> -->
 			</div>
-		</div>
-		<div class="col-md-9 column">
-			<!-- <a name="zds"></a><div class="page-header" style="color: #000;margin-top: -10px;">
-				<h1>
-					团队简介
-				</h1>
-			</div> -->
-			<img src="./image/yjfx.png">
-
 			
 		</div>
 	</div>
-
+	<div class="row clearfix">
+		<div class="col-md-6 column">
+			<dl class="dl-horizontal" style="padding-bottom:80px; font-size: 16px; padding-top: 10px;">
+				<div style="padding: 20px 0;">
+				<dt>电话（传真）：</dt><dd>0731-58292217</dd>
+				</div>
+				<div style="padding: 20px 0;">
+				<dt>招生QQ：</dt><dd>143875459</dd>
+				</div>
+				<div style="padding: 20px 0;">
+				<dt>电子邮箱：</dt><dd>xiaof@xtu.edu.cn</dd>
+				</div>
+				<div style="padding: 20px 0;">
+				<dt>地址：</dt><dd>湖南省湘潭市湘潭大学信息技术实验中心5楼</dd>
+				</div>
+				<div style="padding: 20px 0;">
+				<dt>邮政编码：</dt><dd>411105</dd>
+				</div>
+			</dl>
+		</div>
+		<div class="col-md-6 column">
+			<!--百度地图容器-->
+  			<div style="width:80%;height:300px;margin: 20px 0 20px 50px;" id="dituContent"></div>
+		</div>
+	</div>
 <!-- footer -->
 <div class="footer">
 	<!-- <img class="a" src="./image/sangongmen_bai.png" style="height: 95px;padding-right: 30px;padding-top:5px;"> -->
@@ -194,4 +194,103 @@
 <!-- footer end -->
 </div>
 </body>
+
+<!-- 百度地图相关js -->
+<script type="text/javascript">
+    //创建和初始化地图函数：
+    function initMap(){
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        addMapControl();//向地图添加控件
+        addMarker();//向地图中添加marker
+    }
+    
+    //创建地图函数：
+    function createMap(){
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var point = new BMap.Point(112.865797,27.888816);//定义一个中心点坐标
+        map.centerAndZoom(point,17);//设定地图的中心点和坐标并将地图显示在地图容器中
+        window.map = map;//将map变量存储在全局
+    }
+    
+    //地图事件设置函数：
+    function setMapEvent(){
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+    
+    //地图控件添加函数：
+    function addMapControl(){
+        //向地图中添加缩放控件
+	var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+	map.addControl(ctrl_nav);
+        //向地图中添加缩略图控件
+	var ctrl_ove = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:1});
+	map.addControl(ctrl_ove);
+        //向地图中添加比例尺控件
+	var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+	map.addControl(ctrl_sca);
+    }
+    
+    //标注点数组
+    var markerArr = [{title:"智能信息处理研究团队",content:"湘潭大学信息技术实验中心",point:"112.865824|27.888449",isOpen:1,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+		 ];
+    //创建marker
+    function addMarker(){
+        for(var i=0;i<markerArr.length;i++){
+            var json = markerArr[i];
+            var p0 = json.point.split("|")[0];
+            var p1 = json.point.split("|")[1];
+            var point = new BMap.Point(p0,p1);
+			var iconImg = createIcon(json.icon);
+            var marker = new BMap.Marker(point,{icon:iconImg});
+			var iw = createInfoWindow(i);
+			var label = new BMap.Label(json.title,{"offset":new BMap.Size(json.icon.lb-json.icon.x+10,-20)});
+			marker.setLabel(label);
+            map.addOverlay(marker);
+            label.setStyle({
+                        borderColor:"#808080",
+                        color:"#333",
+                        cursor:"pointer"
+            });
+			
+			(function(){
+				var index = i;
+				var _iw = createInfoWindow(i);
+				var _marker = marker;
+				_marker.addEventListener("click",function(){
+				    this.openInfoWindow(_iw);
+			    });
+			    _iw.addEventListener("open",function(){
+				    _marker.getLabel().hide();
+			    })
+			    _iw.addEventListener("close",function(){
+				    _marker.getLabel().show();
+			    })
+				label.addEventListener("click",function(){
+				    _marker.openInfoWindow(_iw);
+			    })
+				if(!!json.isOpen){
+					label.hide();
+					_marker.openInfoWindow(_iw);
+				}
+			})()
+        }
+    }
+    //创建InfoWindow
+    function createInfoWindow(i){
+        var json = markerArr[i];
+        var iw = new BMap.InfoWindow("<b class='iw_poi_title' title='" + json.title + "'>" + json.title + "</b><div class='iw_poi_content'>"+json.content+"</div>");
+        return iw;
+    }
+    //创建一个Icon
+    function createIcon(json){
+        var icon = new BMap.Icon("http://app.baidu.com/map/images/us_mk_icon.png", new BMap.Size(json.w,json.h),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)})
+        return icon;
+    }
+    
+    initMap();//创建和初始化地图
+</script>
 </html>
